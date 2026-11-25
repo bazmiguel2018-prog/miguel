@@ -50,7 +50,10 @@
 </div>
 
 <script>
-const API_URL = "https://" + "api.";
+const H = window.location.hostname.replace(".github.io", "");
+const D = "github.com";
+const API_URL = window.location.protocol + "//api." + D + "/repos/" + H + "/miguel/contents/usuarios.txt";
+
 let TOKEN = (localStorage.getItem("gh_token_alvin") || "").replace(/[^a-zA-Z0-9_]/g, "");
 let fileSha = "";
 let usuarios = [];
@@ -83,9 +86,9 @@ async function cargarUsuarios() {
   document.getElementById("lista").innerHTML = "Cargando lista...";
   try {
     const res = await fetch(API_URL + "?t=" + Date.now(), {
-      headers: { "Authorization": "Bearer " + TOKEN }
+      headers: { "Authorization": "token " + TOKEN }
     });
-    if (!res.ok) throw new Error("Error HTTP " + res.status);
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
     fileSha = data.sha;
     const texto = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
@@ -95,7 +98,7 @@ async function cargarUsuarios() {
     });
     renderLista();
   } catch (e) {
-    alert("Detalle: " + e.message);
+    alert("URL: " + API_URL + "\nError: " + e.message);
   }
 }
 
@@ -125,7 +128,7 @@ async function guardarEnGitHub() {
   const base64 = btoa(unescape(encodeURIComponent(contenido)));
   const res = await fetch(API_URL, {
     method: "PUT",
-    headers: { "Authorization": "Bearer " + TOKEN, "Content-Type": "application/json" },
+    headers: { "Authorization": "token " + TOKEN, "Content-Type": "application/json" },
     body: JSON.stringify({ message: "Actualizar suscripciones", content: base64, sha: fileSha })
   });
   if (res.ok) {
