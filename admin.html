@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Suscripciones - ALVIN TV</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 16px; }
+  .card { background: #1e293b; border-radius: 12px; padding: 16px; max-width: 600px; margin: 0 auto 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+  h2 { margin-top: 0; color: #38bdf8; font-size: 1.3rem; }
+  input { width: 100%; box-sizing: border-box; padding: 10px; margin: 6px 0 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 1rem; }
+  button { background: #0284c7; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
+  button:hover { background: #0369a1; }
+  .btn-green { background: #16a34a; }
+  .btn-red { background: #dc2626; }
+  .btn-sm { padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; margin-top: 6px; }
+  .user-item { border-bottom: 1px solid #334155; padding: 12px 0; }
+  .user-item:last-child { border-bottom: none; }
+  .badge-ok { background: #166534; color: #bbf7d0; padding: 2px 8px; border-radius: 99px; font-size: 0.75rem; }
+  .badge-exp { background: #991b1b; color: #fecaca; padding: 2px 8px; border-radius: 99px; font-size: 0.75rem; }
+  #panel { display: none; }
+</style>
+</head>
+<body>
+
+<div id="loginBox" class="card">
+  <h2>🔐 Panel ALVIN TV</h2>
+  <p style="font-size:0.9rem; color:#94a3b8;">Ingresa tu Token maestro de GitHub (se guardará en este navegador):</p>
+  <input type="password" id="tokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+  <button onclick="iniciarSesion()" style="width:100%;">Entrar al Panel</button>
+</div>
+
+<div id="panel">
+  <div class="card">
+    <h2>➕ Nuevo Cliente / Clave</h2>
+    <input type="text" id="newClave" placeholder="Clave única (ej. JUAN2026)">
+    <input type="text" id="newNombre" placeholder="Nombre del cliente (ej. Juan Pérez)">
+    <input type="date" id="newFecha">
+    <button class="btn-green" onclick="agregarUsuario()" style="width:100%;">Guardar Cliente</button>
+  </div>
+
+  <div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h2>👥 Clientes Activos (<span id="total">0</span>)</h2>
+      <button onclick="cargarUsuarios()" class="btn-sm">🔄 Actualizar</button>
+    </div>
+    <div id="lista">Cargando...</div>
+  </div>
+</div>
+
+<script>
+const OWNER = "bazmiguel2018-prog";
+const REPO = "miguel";
+const PATH = "usuarios.txt";
+let TOKEN = localStorage.getItem("gh_token_alvin") || "";
+let fileSha = "";
+let usuarios = [];
+
+const d30 = new Date(); d30.setDate(d30.getDate() + 30);
+document.getElementById("newFecha").value = d30.toISOString().split("T");
+
+if (TOKEN) { mostrarPanel(); }
+
+function iniciarSesion() {
+  const t = document.getElementById("tokenInput").value.trim();
+  if (!t) return alert("Pega tu token");
+  TOKEN = t;
+  localStorage.setItem("gh_token_alvin", t);
+  mostrarPanel();
+}
+
+function mostrarPanel() {
+  document.getElementById("loginBox").style.display = "none";
+  document.getElementById("panel").style.display = "block";
+  cargarUsuarios();
+}
+
+async function cargarUsuarios() {
+  document.getElementById("lista").innerHTML = "Cargando lista...";
+  try {
+    const res = await fetch(`https://github.com{OWNER}/${REPO}/contents/${PATH}?t=${Date.now()}`, {
+      headers: { Authorization: `token ${TOKEN}` }
+    });
+    if (!res.ok) throw new Error("Token inválido o no existe usuarios.txt");
+    const data = await res.json();
+    fileSha = data.sha;
+    const texto = decodeURIComponent(escape(atob(data.content)));
+    usuarios = texto.split("\n").map(l => l.trim()).filter(l => l.includes(":")).map(l => {
+      const p = l.split(":");
+      return { clave: p, nombre: p || "Sin nombre", fecha: p || p };
+    });
+    renderLista();
+  } catch (e) {
+    alert("Error: " + e.message);
+    localStorage.removeItem("gh_token_alvin");
+    location.reload();
+  }
+}
+
+function renderLista() {
+  const hoy = new Date().toISOString().split("T");
+  document.getElementById("total").innerText = usuarios.length;
+  const html = usuarios.map((u, i) => {
+    const activo = hoy <= u.fecha;
+    return `<div class="user-item">
+      <div style="display:flex; justify-content:space-between;">
+        <strong>${u.clave}</strong>
+        <span class="${activo ? 'badge-ok' : 'badge-exp'}">${activo ? 'ACTIVO' : 'VENCIDO'}</span>
+      </div>
+      <div style="font-size:0.85rem; color:#94a3b8; margin:4px 0;">Cliente: ${u.nombre} | Vence: <b>${u.fecha}</b></div>
+      <div>
+        <button class="btn-sm btn-green" onclick="sumarDias(${i}, 30)">+30 días</button>
+        <button class="btn-sm" onclick="sumarDias(${i}, 7)">+7 días</button>
+        <button class="btn-sm btn-red" onclick="eliminar(${i})">Eliminar</button>
+      </div>
+    </div>`;
+  }).join("");
+  document.getElementById("lista").innerHTML = html || "<p>No hay usuarios registrados.</p>";
+}
+
+async function guardarEnGitHub() {
+  const contenido = usuarios.map(u => `${u.clave}:${u.nombre}:${u.fecha}`).join("\n");
+  const base64 = btoa(unescape(encodeURIComponent(contenido)));
+  const res = await fetch(`https://github.com{OWNER}/${REPO}/contents/${PATH}`, {
+    method: "PUT",
+    headers: { Authorization: `token ${TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ message: "Actualizar suscripciones", content: base64, sha: fileSha })
+  });
+  if (res.ok) {
+    const data = await res.json();
+    fileSha = data.content.sha;
+    renderLista();
+  } else {
+    alert("Error al guardar en GitHub");
+  }
+}
+
+function agregarUsuario() {
+  const clave = document.getElementById("newClave").value.trim().replace(/:/g, "");
+  const nombre = document.getElementById("newNombre").value.trim().replace(/:/g, "") || "Cliente";
+  const fecha = document.getElementById("newFecha").value;
+  if (!clave || !fecha) return alert("Escribe la clave y la fecha");
+  const idx = usuarios.findIndex(u => u.clave === clave);
+  if (idx >= 0) usuarios[idx] = { clave, nombre, fecha };
+  else usuarios.push({ clave, nombre, fecha });
+  document.getElementById("newClave").value = "";
+  document.getElementById("newNombre").value = "";
+  guardarEnGitHub();
+}
+
+function sumarDias(index, dias) {
+  const hoy = new Date();
+  const actual = new Date(usuarios[index].fecha + "T00:00:00");
+  const base = actual > hoy ? actual : hoy;
+  base.setDate(base.getDate() + dias);
+  usuarios[index].fecha = base.toISOString().split("T");
+  guardarEnGitHub();
+}
+
+function eliminar(index) {
+  if (!confirm("¿Eliminar acceso a " + usuarios[index].clave + "?")) return;
+  usuarios.splice(index, 1);
+  guardarEnGitHub();
+}
+</script>
+</body>
+</html>
