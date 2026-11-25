@@ -11,6 +11,7 @@
   input { width: 100%; box-sizing: border-box; padding: 10px; margin: 6px 0 12px; border-radius: 8px; border: 1px solid #334155; background: #0f172a; color: #fff; font-size: 1rem; }
   button { background: #0284c7; color: white; border: none; padding: 10px 14px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 0.9rem; }
   .btn-green { background: #16a34a; }
+  .btn-yellow { background: #d97706; }
   .btn-red { background: #dc2626; }
   .btn-sm { padding: 6px 10px; font-size: 0.8rem; margin-right: 4px; margin-top: 6px; }
   .user-item { border-bottom: 1px solid #334155; padding: 12px 0; }
@@ -94,11 +95,11 @@ async function cargarUsuarios() {
     const texto = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ""))));
     usuarios = texto.split("\n").map(l => l.trim()).filter(l => l.includes(":")).map(l => {
       const p = l.split(":");
-      return { clave: p.at(0), nombre: p.at(1) || "Cliente", fecha: p.at(-1) };
+      return { clave: p.at(0), nombre: p.at(1) || "Cliente", fecha: p.at(2), dev: p.at(3) || "LIBRE" };
     });
     renderLista();
   } catch (e) {
-    alert("URL: " + API_URL + "\nError: " + e.message);
+    alert("Error: " + e.message);
   }
 }
 
@@ -107,15 +108,19 @@ function renderLista() {
   document.getElementById("total").innerText = usuarios.length;
   const html = usuarios.map((u, i) => {
     const activo = hoy <= u.fecha;
+    const vinculado = u.dev && u.dev !== "LIBRE";
     return `<div class="user-item">
       <div style="display:flex; justify-content:space-between;">
         <strong>${u.clave}</strong>
         <span class="${activo ? 'badge-ok' : 'badge-exp'}">${activo ? 'ACTIVO' : 'VENCIDO'}</span>
       </div>
-      <div style="font-size:0.85rem; color:#94a3b8; margin:4px 0;">Cliente: ${u.nombre} | Vence: <b>${u.fecha}</b></div>
+      <div style="font-size:0.85rem; color:#94a3b8; margin:4px 0;">
+        Cliente: ${u.nombre} | Vence: <b>${u.fecha}</b><br>
+        Equipo: <b>${vinculado ? '🔒 Vinculado (' + u.dev.slice(0,6) + '...)' : '🔓 Disponible (1 equipo)'}</b>
+      </div>
       <div>
         <button class="btn-sm btn-green" onclick="sumarDias(${i}, 30)">+30 días</button>
-        <button class="btn-sm" onclick="sumarDias(${i}, 7)">+7 días</button>
+        <button class="btn-sm btn-yellow" onclick="liberarEquipo(${i})">Liberar equipo</button>
         <button class="btn-sm btn-red" onclick="eliminar(${i})">Eliminar</button>
       </div>
     </div>`;
@@ -124,7 +129,7 @@ function renderLista() {
 }
 
 async function guardarEnGitHub() {
-  const contenido = usuarios.map(u => `${u.clave}:${u.nombre}:${u.fecha}`).join("\n");
+  const contenido = usuarios.map(u => `${u.clave}:${u.nombre}:${u.fecha}:${u.dev || "LIBRE"}`).join("\n");
   const base64 = btoa(unescape(encodeURIComponent(contenido)));
   const res = await fetch(API_URL, {
     method: "PUT",
@@ -146,8 +151,12 @@ function agregarUsuario() {
   const fecha = document.getElementById("newFecha").value;
   if (!clave || !fecha) return alert("Escribe la clave y la fecha");
   const idx = usuarios.findIndex(u => u.clave === clave);
-  if (idx >= 0) usuarios.at(idx).nombre = nombre, usuarios.at(idx).fecha = fecha;
-  else usuarios.push({ clave, nombre, fecha });
+  if (idx >= 0) {
+    usuarios.at(idx).nombre = nombre;
+    usuarios.at(idx).fecha = fecha;
+  } else {
+    usuarios.push({ clave, nombre, fecha, dev: "LIBRE" });
+  }
   document.getElementById("newClave").value = "";
   document.getElementById("newNombre").value = "";
   guardarEnGitHub();
@@ -159,6 +168,11 @@ function sumarDias(index, dias) {
   const base = actual > hoy ? actual : hoy;
   const nueva = new Date(base.getTime() + dias * 86400000);
   usuarios.at(index).fecha = nueva.toISOString().slice(0, 10);
+  guardarEnGitHub();
+}
+
+function liberarEquipo(index) {
+  usuarios.at(index).dev = "LIBRE";
   guardarEnGitHub();
 }
 
