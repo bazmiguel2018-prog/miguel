@@ -14,7 +14,6 @@ Vic12:Prueba77yh:2026-12-26:2d8a634db9bc90e6
 OscarG:Prueboscar:2026-12-26:d77b5a8f4c7a7250
 DEMO2:Prueba1nk:2026-12-26:7f48b5dc84800817
 Stiven34:Pruebajdbd:2026-12-26:LIBRE
-CarlosB:Pruebaudvhs:2026-12-26:LIBRE
 And86:Pruebayhsvhs:2026-12-26:f329a86291f4d802
 Arm21:Prueba7756:2026-12-26:876a7db1de6859de
 Andre21:Prieba76y:2026-12-26:adda6922e2c4769e
