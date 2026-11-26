@@ -13,7 +13,6 @@ Ealr-aporto:Ealr-aporto:2027-03-01:d1e40537cb02dbb8
 Vic12:Prueba77yh:2026-12-26:2d8a634db9bc90e6
 OscarG:Prueboscar:2026-12-26:d77b5a8f4c7a7250
 DEMO2:Prueba1nk:2026-12-26:7f48b5dc84800817
-Rod3:Pruebiwjwj:2026-12-26:LIBRE
 Fort7:Pruebajhv:2026-12-26:LIBRE
 Stiven34:Pruebajdbd:2026-12-26:LIBRE
 CarlosB:Pruebaudvhs:2026-12-26:LIBRE
