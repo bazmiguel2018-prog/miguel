@@ -2,7 +2,6 @@ MIGUEL:ADALID:2027-03-26:80b2434d05029e00
 1234:Cuñadajoss1:2027-03-01:b891181fe2b4ccbb
 1212:Cuñadajoss2:2027-03-01:5b9eb489283ad75b
 Ealr-aporto:Ealr-aporto:2027-03-01:d1e40537cb02dbb8
-Hermosilla1:Pruebahermosilla1:2026-12-27:4a3a775f9c5a9b1f
 Luiwaporte:Luiw-me-aporto:2027-03-01:45127a82fd26dc33
 John123:Pruebajohn123:2026-12-27:08124c7c5637963b
 Gendo1:Pruebagendo1:2026-12-27:LIBRE
