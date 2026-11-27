@@ -24,6 +24,5 @@ Edgar56:Pruebaedgar56:2026-12-26:ee984a6cab80a524
 Ricardo789:Pruebaric:2026-12-26:a5f80fd233deafa1
 Maria1112:Pruebamaria1112:2026-12-26:00888d2248a831cb
 Bra22:Prueba11:2026-12-26:fed2ce396fd99b1f
-Leon12:Pruebaleon12:2026-12-27:LIBRE
 Hermosilla1:Pruebahermosilla1:2026-12-27:4a3a775f9c5a9b1f
 Luiwaporte:Luiw-me-aporto:2027-03-01:45127a82fd26dc33
