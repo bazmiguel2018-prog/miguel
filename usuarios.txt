@@ -10,5 +10,5 @@ Andresdemo:Pruebaandres:2026-12-27:adda6922e2c4769e
 Jonaaporto:Jona-aporto:2026-12-27:8f63727bbd15ee6a
 Ordi1:Pruebaordi1:2026-12-27:LIBRE
 Greñasdemo:Pruebagratis:2026-12-27:0e17d85b3f2d2b38
-Josesuaresaporte:Josesuaresaporto:2026-12-27:LIBRE
+Josesuaresaporte:Josesuaresaporto:2027-01-26:LIBRE
 Suaresaporte:Suaresmeaporto:2027-04-26:LIBRE
