@@ -3,7 +3,6 @@ MIGUEL:ADALID:2027-03-26:80b2434d05029e00
 1212:Cuñadajoss2:2027-03-01:5b9eb489283ad75b
 Ealr-aporto:Ealr-aporto:2027-03-01:d1e40537cb02dbb8
 Luiwaporte:Luiw-me-aporto:2027-03-01:45127a82fd26dc33
-Gendo1:Pruebagendo1:2026-12-27:LIBRE
 Valen1:Pruebavalen1:2026-12-27:87fd1f327e8e9771
 Lobo12:Pruebalobo12:2026-12-27:4b39a0987aad9cc9
 Serg1:Pruebaserrg:2026-12-27:56e7c02cf749521f
