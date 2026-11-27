@@ -2,7 +2,6 @@ MIGUEL:ADALID:2027-03-26:80b2434d05029e00
 1234:Cuñadajoss1:2027-03-01:b891181fe2b4ccbb
 1212:Cuñadajoss2:2027-03-01:5b9eb489283ad75b
 Ealr-aporto:Ealr-aporto:2027-03-01:d1e40537cb02dbb8
-Jor99:Puevajor99:2026-12-26:b67899e802b872e1
 Edgar56:Pruebaedgar56:2026-12-26:ee984a6cab80a524
 Ricardo789:Pruebaric:2026-12-26:a5f80fd233deafa1
 Maria1112:Pruebamaria1112:2026-12-26:00888d2248a831cb
