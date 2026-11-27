@@ -23,7 +23,6 @@ Jor99:Puevajor99:2026-12-26:b67899e802b872e1
 Edgar56:Pruebaedgar56:2026-12-26:ee984a6cab80a524
 Ricardo789:Pruebaric:2026-12-26:a5f80fd233deafa1
 Maria1112:Pruebamaria1112:2026-12-26:00888d2248a831cb
-Andreface:Pruebaandre:2026-12-26:LIBRE
 Bra22:Prueba11:2026-12-26:fed2ce396fd99b1f
 Gabriel89:Pruebagabriel89:2026-12-26:LIBRE
 Sty123:Pruebastyjab:2026-12-27:LIBRE
